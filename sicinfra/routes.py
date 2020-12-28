@@ -3,8 +3,8 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from sicinfra import app, db, bcrypt
-from sicinfra.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampusForm, EdificioForm
-from sicinfra.models import User, Post, Campi, Edificios
+from sicinfra.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampusForm, EdificioForm, AmbienteForm
+from sicinfra.models import User, Post, Campi, Edificios, Ambientes
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
@@ -22,6 +22,11 @@ def campi():
 def edificios():
     edificios = Edificios.query.all()
     return render_template('edificios.html', title='Edificios', edificios=edificios)
+
+@app.route("/ambientes")
+def ambientes():
+    ambientes = Ambientes.query.all()
+    return render_template('ambientes.html', title='Ambientes', ambientes=ambientes)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -123,6 +128,21 @@ def novo_edificio():
     return render_template('criar_edificio.html', title='Novo Edificio',
                             form=form, legend='Novo Edificio')
 
+@app.route("/ambientes/novo", methods=['GET', 'POST'])
+@login_required
+def novo_ambiente():
+    form = AmbienteForm()
+    if form.validate_on_submit():
+        nome_edificio_origem = form.nome_edificio.data.nome
+        edificio_origem = Edificios.query.filter_by(nome=nome_edificio_origem).first()
+        ambiente = Ambientes(endereco=form.endereco.data, descricao=form.descricao.data, area_total=form.area_total.data, area_util=form.area_util.data, uso=form.uso.data, id_edificio=edificio_origem.id)
+        db.session.add(ambiente)
+        db.session.commit()
+        flash("Novo ambiente criado!", "success")
+        return redirect(url_for('home'))
+    return render_template('criar_ambiente.html', title='Novo Ambiente',
+                            form=form, legend='Novo Ambiente')
+
 @app.route("/campi/<int:campus_id>")
 def campus(campus_id):
     campus = Campi.query.get_or_404(campus_id)
@@ -132,6 +152,11 @@ def campus(campus_id):
 def edificio(edificio_id):
     edificio = Edificios.query.get_or_404(edificio_id)
     return render_template('edificio.html', title=edificio.nome, edificio=edificio)
+
+@app.route("/ambientes/<int:ambiente_id>")
+def ambiente(ambiente_id):
+    ambiente = Ambientes.query.get_or_404(ambiente_id)
+    return render_template('ambiente.html', title=ambiente.endereco, ambiente=ambiente)
 
 @app.route("/campi/<int:campus_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -165,6 +190,22 @@ def update_edificio(edificio_id):
     return render_template('criar_edificio.html', title="Editar Edificio",
                             form=form, legend='Editar Edificio')
 
+@app.route("/ambientes/<int:ambiente_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_ambiente(ambiente_id):
+    ambiente = Ambientes.query.get_or_404(edificio_id)
+    form = AmbienteForm()
+    if form.validate_on_submit():
+        nome_edificio_origem = form.nome_edificio.data.nome
+        edificio_origem = Edificios.query.filter_by(nome=nome_edificio_origem).first()
+        ambiente = Ambientes(endereco=form.endereco.data, descricao=form.descricao.data, area_total=form.area_total.data, area_util=form.area_util.data, uso=form.uso.data, id_edificio=edificio_origem.id)
+        db.session.commit()
+        flash('O ambiente foi atualizado!', 'success')
+        return redirect(url_for('ambientes', ambiente_id=ambiente.id))
+    elif request.method == 'GET':
+        form.endereco.data = ambiente.endereco
+    return render_template('criar_ambiente.html', title="Editar Ambiente",
+                            form=form, legend='Editar Ambiente')
 
 @app.route("/campi/<int:campus_id>/deletar", methods=['POST'])
 @login_required
@@ -183,3 +224,12 @@ def deletar_edificio(edificio_id):
     db.session.commit()
     flash('O edificio foi deletado!', 'success')
     return redirect(url_for('edificios', edificio_id=edificio.id))
+
+@app.route("/ambientes/<int:ambiente_id>/deletar", methods=['POST'])
+@login_required
+def deletar_ambiente(ambiente_id):
+    ambiente = Ambientes.query.get_or_404(ambiente_id)
+    db.session.delete(ambiente)
+    db.session.commit()
+    flash('O ambiente foi deletado!', 'success')
+    return redirect(url_for('ambietnes', edificio_id=edificio.id))

@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for ambiente in ambientes %}
+        <article class="media content-section">
+          <div class="media-body">
+            <h2><a class="article-title" href="{{url_for('ambiente', ambiente_id=ambiente.id)}}">{{ ambiente.endereco }}</a></h2>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
