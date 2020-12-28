@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+<article class="media content-section">
+    <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_edificio', edificio_id=edificio.id) }}">Editar</a>
+        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Deletar</button>
+    </div>
+    <div class="media-body">
+      <h2 class="edificio-nome">{{ edificio.nome }}</h2>
+    </div>
+</article>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Deletar Edificio?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Sair</button>
+          <form action="{{ url_for('deletar_edificio', edificio_id=edificio.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Deletar">
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content %}

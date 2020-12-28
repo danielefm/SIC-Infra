@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for edificio in edificios %}
+        <article class="media content-section">
+          <div class="media-body">
+            <h2><a class="article-title" href="{{url_for('edificio', edificio_id=edificio.id)}}">{{ edificio.nome }}</a></h2>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

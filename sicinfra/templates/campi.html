@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for campus in campi %}
+        <article class="media content-section">
+          <div class="media-body">
+            <h2><a class="article-title" href="{{url_for('campus', campus_id=campus.id)}}">{{ campus.nome }}</a></h2>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
