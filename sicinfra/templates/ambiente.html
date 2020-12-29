@@ -2,21 +2,16 @@
 {% block content %}
 <article class="media content-section">
     <div>
-        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_campus', campus_id=campus.id) }}">Editar</a>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_ambiente', ambiente_id=ambiente.id) }}">Editar Ambiente</a>
         <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Deletar</button>
     </div>
 
     <div class="media-body">
         <h2 class="campus-nome">Campus {{ campus.nome }}</h2>
+      {% for edificio in edificios %}
+        <p><a class="article-title" href="{{url_for('edificio', edificio_id=edificio.id)}}">{{ edificio.nome }}</a></p>
+      {% endfor %}
     </div>
-</article>
-
-<article class="media content-section">
-    <div class="media-body">
-    {% for edificio in edificios %}
-      <p><a class="article-title" href="{{url_for('edificio', edificio_id=edificio.id)}}">{{ edificio.nome }}</a></p>
-    {% endfor %}
-  </div>
 </article>
 
 <!-- Modal -->

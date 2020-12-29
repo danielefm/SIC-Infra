@@ -43,6 +43,11 @@ class Edificios(db.Model):
     nome = db.Column(db.String(50), nullable=False)
     sigla = db.Column(db.String(10))
     id_campus = db.Column(db.Integer, db.ForeignKey('campi.id'), nullable=False)
+    num_ambientes = db.Column(db.Integer)
+    area_total_construida = db.Column(db.Float(precision=',2'))
+    area_util_construida = db.Column(db.Float(precision=',2'))
+    uso_principal = db.Column(db.String(30))
+    uso_secundario = db.Column(db.String(30))
     ambientes = db.relationship('Ambientes', backref='Edificio de localizacao', lazy=True)
 
 class Ambientes(db.Model):
@@ -53,4 +58,3 @@ class Ambientes(db.Model):
     area_util = db.Column(db.Float(precision=',2'), nullable=False)
     uso = db.Column(db.Integer, nullable=False)
     id_edificio = db.Column(db.Integer, db.ForeignKey('edificios.id'), nullable=False)
-

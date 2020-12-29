@@ -2,6 +2,7 @@ import os
 import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
+from sqlalchemy import func
 from sicinfra import app, db, bcrypt
 from sicinfra.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampusForm, EdificioForm, AmbienteForm
 from sicinfra.models import User, Post, Campi, Edificios, Ambientes
@@ -146,12 +147,21 @@ def novo_ambiente():
 @app.route("/campi/<int:campus_id>")
 def campus(campus_id):
     campus = Campi.query.get_or_404(campus_id)
-    return render_template('campus.html', title=campus.nome, campus=campus)
+    edificios = db.session.query(Edificios).filter(Edificios.id_campus==campus_id)
+    return render_template('campus.html', title=campus.nome, campus=campus, edificios=edificios)
 
 @app.route("/edificios/<int:edificio_id>")
 def edificio(edificio_id):
     edificio = Edificios.query.get_or_404(edificio_id)
-    return render_template('edificio.html', title=edificio.nome, edificio=edificio)
+    edificio.num_ambientes = db.session.query(Ambientes).filter(Ambientes.id_edificio==edificio_id).count()
+    edificio.area_total_construida = db.session.query(func.sum(Ambientes.area_total)).filter(Ambientes.id_edificio==edificio_id)
+    edificio.area_util_construida = db.session.query(func.sum(Ambientes.area_util)).filter(Ambientes.id_edificio==edificio_id)
+    db.session.commit()
+    ambientes = db.session.query(Ambientes).filter(Ambientes.id_edificio==edificio_id)
+    return render_template('edificio.html',
+                            title=edificio.nome,
+                            edificio=edificio,
+                            ambientes=ambientes)
 
 @app.route("/ambientes/<int:ambiente_id>")
 def ambiente(ambiente_id):
@@ -232,4 +242,4 @@ def deletar_ambiente(ambiente_id):
     db.session.delete(ambiente)
     db.session.commit()
     flash('O ambiente foi deletado!', 'success')
-    return redirect(url_for('ambietnes', edificio_id=edificio.id))
+    return redirect(url_for('campi'))
