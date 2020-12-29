@@ -72,13 +72,13 @@ class EdificioForm(FlaskForm):
 def edificio_query():
     return Edificios.query
 
-opcoes_uso = [(9,'Escritórios'), (11,'Laboratórios e Estúdios'), (13,'Escolas em geral'),(18,'Museus e bibliotecas'),(22,'Artes cênicas e auditórios'),(25,'Restaurantes'),(29,'Hospitais Veterinários'),(30,'Hospitais em geral'),(37,'Depósitos')]
+opcoes_uso = [('9-Escritórios'), ('11-Laboratórios e Estúdios'), ('13-Escolas em geral'),('18-Museus e bibliotecas'),('22-Artes cênicas e auditórios'),('25-Restaurantes'),('29-Hospitais Veterinários'),('30-Hospitais em geral'),('37-Depósitos'),('98-Banheiros'), ('99-Circulação')]
 
 class AmbienteForm(FlaskForm):
     endereco = StringField('Endereço (Ex.: AT-15/25)', validators=[DataRequired()])
     descricao = StringField('Descrição (Ex.: Copa)', validators=[DataRequired()])
-    area_total = DecimalField('Área Total', validators=[DataRequired()])
-    area_util = DecimalField('Área Útil', validators=[DataRequired()])
+    area_total = DecimalField('Área Total', places=2, validators=[DataRequired()])
+    area_util = DecimalField('Área Útil', places=2, validators=[DataRequired()])
     uso = SelectField('Uso', validators=[DataRequired()], choices=opcoes_uso)
-    nome_edificio = QuerySelectField(query_factory=edificio_query, allow_blank=False, get_label='nome')
+    sigla_edificio = QuerySelectField(query_factory=edificio_query, allow_blank=False, get_label='sigla')
     criar = SubmitField('Criar')

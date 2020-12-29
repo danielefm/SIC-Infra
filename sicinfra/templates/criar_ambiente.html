@@ -71,16 +71,16 @@
                 {% endif %}
             </div>
             <div class="form-group">
-                {{ form.nome_edificio.label(class="form-control-label") }}
-                {% if form.nome_edificio.errors %}
-                    {{ form.nome_edificio(class="form-control form-control-lg is-invalid") }}
+                {{ form.sigla_edificio.label(class="form-control-label") }}
+                {% if form.sigla_edificio.errors %}
+                    {{ form.sigla_edificio(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
-                        {% for error in form.nome_edificio.errors %}
+                        {% for error in form.sigla_edificio.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.nome_edificio(class="form-control form-control-lg") }}
+                    {{ form.sigla_edificio(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
         </fieldset>

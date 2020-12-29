@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Post', backref='author', lazy=True)
+    posts = db.relationship('Post', cascade="all,delete", backref='author', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -33,7 +33,7 @@ class Post(db.Model):
 class Campi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50), nullable=False)
-    edificios = db.relationship('Edificios', backref='Campus de localizacao', lazy=True)
+    edificios = db.relationship('Edificios', cascade="all,delete", backref='Campus de localizacao', lazy=True)
 
     def __repr__(self):
         return f"{self.id}"
@@ -48,7 +48,7 @@ class Edificios(db.Model):
     area_util_construida = db.Column(db.Float(precision=',2'))
     uso_principal = db.Column(db.String(30))
     uso_secundario = db.Column(db.String(30))
-    ambientes = db.relationship('Ambientes', backref='Edificio de localizacao', lazy=True)
+    ambientes = db.relationship('Ambientes', cascade="all,delete", backref='Edificio de localizacao', lazy=True)
 
 class Ambientes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -56,5 +56,5 @@ class Ambientes(db.Model):
     descricao = db.Column(db.String(50), nullable=False)
     area_total = db.Column(db.Float(precision=',2'), nullable=False)
     area_util = db.Column(db.Float(precision=',2'), nullable=False)
-    uso = db.Column(db.Integer, nullable=False)
+    uso = db.Column(db.String(30), nullable=False)
     id_edificio = db.Column(db.Integer, db.ForeignKey('edificios.id'), nullable=False)

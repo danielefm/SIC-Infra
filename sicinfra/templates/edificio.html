@@ -1,43 +1,67 @@
 {% extends "layout.html" %}
 {% block content %}
 <article class="media content-section">
-    <div>
-        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_edificio', edificio_id=edificio.id) }}">Editar Edifício</a>
-        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Deletar</button>
-    </div>
     <div class="media-body">
       <h3 class="edificio-nome"> {{ edificio.nome }}</h3>
     </div>
+    <div>
+    </div>
+    <div>
+      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_edificio', edificio_id=edificio.id) }}">Editar Edifício</a>
+      <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Deletar</button>
+  </div>
 </article>
 <article class="media content-section">
   <div class="media-body">
         <p><b>Número de ambientes: </b>{{ edificio.num_ambientes }}</p>
         <p><b>Área total construída: </b>{{ edificio.area_total_construida }}</p>
-        <p><b>Área útil construída: </b>{{ edificio.area_útil_construida }}</p>
+        <p><b>Área útil construída: </b>{{ edificio.area_util_construida }}</p>
   </div>
 </article>
+
 <article class="media content-section">
   <table class="table">
     <thead>
         <tr>
-            <th>Editar/Deletar</th>
+            <th>Cód. Uso</th>
+            <th>Área</th>
+            <th>% da Área Total</th>
+        <tr>
+    </thead>
+    <tbody>
+      {% for uso in usos %}
+      <tr>
+        <td>{{ uso.uso }}</td>
+        <td>{{ uso.total }}</td>
+        <td> {{ (100*uso.total/edificio.area_total_construida)|round }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</article>
+
+<article class="media content-section">
+  <table class="table">
+    <thead>
+        <tr>
             <th>Endereço</th>
             <th>Descrição</th>
             <th>Área Total</th>
             <th>Área Útil</th>
             <th>Uso</th>
+            <th>Editar/Deletar</th>
         <tr>
     </thead>
     <tbody>
       {% for ambiente in ambientes %}
       <tr>
-        <td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_ambiente', ambiente_id=ambiente.id) }}">Editar</a>
-            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal2">Deletar</button></td>
         <td>{{ ambiente.endereco }}</td>
         <td>{{ ambiente.descricao }}</td>
         <td>{{ ambiente.area_total }}</td>
         <td>{{ ambiente.area_util }}</td>
         <td>{{ ambiente.uso }}</td>
+        <td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_ambiente', ambiente_id=ambiente.id) }}">Editar</a>
+          <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal2">Deletar</button></td>
       </tr>
 
       <!-- Modal -->
@@ -71,7 +95,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Deletar Edificio?</h5>
+          <h5 class="modal-title" id="deleteModalLabel">Deletar Edificio? Os ambientes contidos nele também serão apagados.</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

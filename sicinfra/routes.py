@@ -134,8 +134,8 @@ def novo_edificio():
 def novo_ambiente():
     form = AmbienteForm()
     if form.validate_on_submit():
-        nome_edificio_origem = form.nome_edificio.data.nome
-        edificio_origem = Edificios.query.filter_by(nome=nome_edificio_origem).first()
+        sigla_edificio_origem = form.sigla_edificio.data.sigla
+        edificio_origem = Edificios.query.filter_by(sigla=sigla_edificio_origem).first()
         ambiente = Ambientes(endereco=form.endereco.data, descricao=form.descricao.data, area_total=form.area_total.data, area_util=form.area_util.data, uso=form.uso.data, id_edificio=edificio_origem.id)
         db.session.add(ambiente)
         db.session.commit()
@@ -158,10 +158,17 @@ def edificio(edificio_id):
     edificio.area_util_construida = db.session.query(func.sum(Ambientes.area_util)).filter(Ambientes.id_edificio==edificio_id)
     db.session.commit()
     ambientes = db.session.query(Ambientes).filter(Ambientes.id_edificio==edificio_id)
+    usos = db.session.query(
+                            Ambientes.uso,
+                            func.sum(Ambientes.area_total).label('total')
+                            ).filter(Ambientes.id_edificio==edificio_id
+                            ).group_by(Ambientes.uso
+                            ).all()
     return render_template('edificio.html',
                             title=edificio.nome,
                             edificio=edificio,
-                            ambientes=ambientes)
+                            ambientes=ambientes,
+                            usos=usos)
 
 @app.route("/ambientes/<int:ambiente_id>")
 def ambiente(ambiente_id):
@@ -203,17 +210,20 @@ def update_edificio(edificio_id):
 @app.route("/ambientes/<int:ambiente_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_ambiente(ambiente_id):
-    ambiente = Ambientes.query.get_or_404(edificio_id)
+    ambiente = Ambientes.query.get_or_404(ambiente_id)
     form = AmbienteForm()
     if form.validate_on_submit():
-        nome_edificio_origem = form.nome_edificio.data.nome
-        edificio_origem = Edificios.query.filter_by(nome=nome_edificio_origem).first()
+        sigla_edificio_origem = form.sigla_edificio.data.sigla
+        edificio_origem = Edificios.query.filter_by(sigla=sigla_edificio_origem).first()
         ambiente = Ambientes(endereco=form.endereco.data, descricao=form.descricao.data, area_total=form.area_total.data, area_util=form.area_util.data, uso=form.uso.data, id_edificio=edificio_origem.id)
         db.session.commit()
         flash('O ambiente foi atualizado!', 'success')
-        return redirect(url_for('ambientes', ambiente_id=ambiente.id))
+        return redirect(url_for('campi'))
     elif request.method == 'GET':
         form.endereco.data = ambiente.endereco
+        form.descricao.data = ambiente.descricao
+        form.area_total.data = ambiente.area_total
+        form.area_util.data = ambiente.area_util
     return render_template('criar_ambiente.html', title="Editar Ambiente",
                             form=form, legend='Editar Ambiente')
 
