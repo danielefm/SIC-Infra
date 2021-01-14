@@ -33,6 +33,9 @@ class Post(db.Model):
 class Campi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50), nullable=False)
+    num_edificios = db.Column(db.Integer)
+    area_total_construida = db.Column(db.Float(precision=',2'))
+    area_util_construida = db.Column(db.Float(precision=',2'))
     edificios = db.relationship('Edificios', cascade="all,delete", backref='Campus de localizacao', lazy=True)
 
     def __repr__(self):

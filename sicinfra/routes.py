@@ -147,8 +147,15 @@ def novo_ambiente():
 @app.route("/campi/<int:campus_id>")
 def campus(campus_id):
     campus = Campi.query.get_or_404(campus_id)
+    campus.num_edificios = db.session.query(Edificios).filter(Edificios.id_campus==campus_id).count()
+    campus.area_total_construida = db.session.query(func.sum(Edificios.area_total_construida)).filter(Edificios.id_campus==campus_id)
+    campus.area_util_construida = db.session.query(func.sum(Edificios.area_util_construida)).filter(Edificios.id_campus==campus_id)
+    db.session.commit()
     edificios = db.session.query(Edificios).filter(Edificios.id_campus==campus_id)
-    return render_template('campus.html', title=campus.nome, campus=campus, edificios=edificios)
+    return render_template('campus.html',
+                            title=campus.nome,
+                            campus=campus,
+                            edificios=edificios)
 
 @app.route("/edificios/<int:edificio_id>")
 def edificio(edificio_id):

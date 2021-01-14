@@ -1,16 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
 <article class="media content-section">
-    <div>
+  <div class="media-body">
+    <h3 class="campus-nome">Campus {{ campus.nome }}</h2>
+  </div>
+  <div>
+  </div>
+  <div>
         <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_campus', campus_id=campus.id) }}">Editar</a>
         <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Deletar</button>
-    </div>
-
-    <div class="media-body">
-        <h2 class="campus-nome">Campus {{ campus.nome }}</h2>
-    </div>
+  </div>
 </article>
 
+<article class="media content-section">
+  <div class="media-body">
+        <p><b>Número de edifícios: </b>{{ campus.num_edificios }}</p>
+        <p><b>Área total construída: </b>{{ campus.area_total_construida }} m2</p>
+        <p><b>Área útil construída: </b>{{ campus.area_util_construida }} m2</p>
+  </div>
+</article>
+
+<p><b>Lista de edifícios do campus (clique no edifício para mais informações):</b></p>
 <article class="media content-section">
     <div class="media-body">
     {% for edificio in edificios %}

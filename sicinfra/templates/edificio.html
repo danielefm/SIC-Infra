@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
 <article class="media content-section">
-    <div class="media-body">
-      <h3 class="edificio-nome"> {{ edificio.nome }}</h3>
-    </div>
-    <div>
-    </div>
-    <div>
+  <div class="media-body">
+    <h3 class="edificio-nome"> {{ edificio.nome }}</h3>
+  </div>
+  <div>
+  </div>
+  <div>
       <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_edificio', edificio_id=edificio.id) }}">Editar Edifício</a>
       <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Deletar</button>
   </div>
@@ -14,17 +14,18 @@
 <article class="media content-section">
   <div class="media-body">
         <p><b>Número de ambientes: </b>{{ edificio.num_ambientes }}</p>
-        <p><b>Área total construída: </b>{{ edificio.area_total_construida }}</p>
-        <p><b>Área útil construída: </b>{{ edificio.area_util_construida }}</p>
+        <p><b>Área total construída: </b>{{ edificio.area_total_construida }} m2</p>
+        <p><b>Área útil construída: </b>{{ edificio.area_util_construida }} m2</p>
   </div>
 </article>
 
+<p><b>Resumo dos usos da edificação:</b></p>
 <article class="media content-section">
   <table class="table">
     <thead>
         <tr>
             <th>Cód. Uso</th>
-            <th>Área</th>
+            <th>Área (m2)</th>
             <th>% da Área Total</th>
         <tr>
     </thead>
@@ -40,6 +41,7 @@
   </table>
 </article>
 
+<p><b>Lista de ambientes:</b></p>
 <article class="media content-section">
   <table class="table">
     <thead>
