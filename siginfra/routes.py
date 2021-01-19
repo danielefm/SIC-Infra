@@ -136,7 +136,12 @@ def novo_ambiente():
     if form.validate_on_submit():
         sigla_edificio_origem = form.sigla_edificio.data.sigla
         edificio_origem = Edificios.query.filter_by(sigla=sigla_edificio_origem).first()
-        ambiente = Ambientes(endereco=form.endereco.data, descricao=form.descricao.data, area_total=form.area_total.data, area_util=form.area_util.data, uso=form.uso.data, id_edificio=edificio_origem.id)
+        ambiente = Ambientes(endereco=form.endereco.data,
+                             descricao=form.descricao.data,
+                             area_total=form.area_total.data,
+                             area_util=form.area_util.data,
+                             uso=form.uso.data,
+                             id_edificio=edificio_origem.id)
         db.session.add(ambiente)
         db.session.commit()
         flash("Novo ambiente criado!", "success")
@@ -206,6 +211,7 @@ def update_edificio(edificio_id):
         nome_campus_origem = form.nome_campus.data.nome
         campus_origem = Campi.query.filter_by(nome=nome_campus_origem).first()
         edificio = Edificios(nome=form.nome.data, sigla=form.sigla.data, id_campus=campus_origem.id)
+
         db.session.commit()
         flash('O edificio foi atualizado!', 'success')
         return redirect(url_for('edificios', edificio_id=edificio.id))
@@ -222,15 +228,23 @@ def update_ambiente(ambiente_id):
     if form.validate_on_submit():
         sigla_edificio_origem = form.sigla_edificio.data.sigla
         edificio_origem = Edificios.query.filter_by(sigla=sigla_edificio_origem).first()
-        ambiente = Ambientes(endereco=form.endereco.data, descricao=form.descricao.data, area_total=form.area_total.data, area_util=form.area_util.data, uso=form.uso.data, id_edificio=edificio_origem.id)
+        ambiente.endereco=form.endereco.data
+        ambiente.descricao=form.descricao.data
+        ambiente.area_total=form.area_total.data
+        ambiente.area_util=form.area_util.data
+        ambiente.uso=form.uso.data
+        ambiente.id_edificio=edificio_origem.id
         db.session.commit()
         flash('O ambiente foi atualizado!', 'success')
         return redirect(url_for('campi'))
     elif request.method == 'GET':
+        sigla_edificio_origem = Edificios.query.filter_by(id=ambiente.id_edificio).first()
         form.endereco.data = ambiente.endereco
         form.descricao.data = ambiente.descricao
         form.area_total.data = ambiente.area_total
         form.area_util.data = ambiente.area_util
+        form.uso.data = ambiente.uso
+        form.sigla_edificio.data = sigla_edificio_origem
     return render_template('criar_ambiente.html', title="Editar Ambiente",
                             form=form, legend='Editar Ambiente')
 
