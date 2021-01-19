@@ -4,7 +4,7 @@ from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, DecimalField, SelectField
 from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from sicinfra.models import User, Campi, Ambientes, Edificios
+from siginfra.models import User, Campi, Ambientes, Edificios
 
 
 class RegistrationForm(FlaskForm):

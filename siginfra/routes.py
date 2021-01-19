@@ -3,9 +3,9 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 from sqlalchemy import func
-from sicinfra import app, db, bcrypt
-from sicinfra.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampusForm, EdificioForm, AmbienteForm
-from sicinfra.models import User, Post, Campi, Edificios, Ambientes
+from siginfra import app, db, bcrypt
+from siginfra.forms import RegistrationForm, LoginForm, UpdateAccountForm, CampusForm, EdificioForm, AmbienteForm
+from siginfra.models import User, Post, Campi, Edificios, Ambientes
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
